@@ -1,0 +1,19 @@
+# Keep serverless bundles under Vercel's size limit — never upload local envs.
+backend/.venv-mac
+backend/.venv
+backend/venv
+**/.venv
+**/.venv-*/
+**/venv/
+**/__pycache__/
+**/node_modules/
+frontend/node_modules
+.git
+.cursor
+.claude
+**/*.pyc
+backend/evals
+backend/tests
+backend/scripts
+*.md
+docs/
