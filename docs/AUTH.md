@@ -197,26 +197,24 @@ Re-run the seed only if no admin exists yet, or set the password when seeding vi
 
 | Path | Purpose |
 |------|---------|
-| `src/lib/supabaseClient.js` | Supabase browser client |
-| `src/contexts/AuthContext.jsx` | Session state, sign in/up/out, role from `profiles` |
-| `src/components/auth/RequireAuth.jsx` | Admin/manager route guards |
-| `src/components/auth/AuthLayout.jsx` | Shared auth page UI |
-| `src/pages/auth/AdminLogin.jsx` | Admin login |
-| `src/pages/auth/ManagerLogin.jsx` | Manager login |
-| `src/pages/auth/ManagerSignup.jsx` | Manager signup |
-| `src/App.jsx` | Protected routes |
-| `src/main.jsx` | `AuthProvider` wrapper |
-| `src/components/layout/Sidebar.jsx` | User display + logout |
-| `src/pages/ManagerForm.jsx` | Header logout |
-| `supabase/migrations/001_profiles_and_auth.sql` | DB schema + RLS |
+| `frontend/src/supabaseClient.js` | Supabase browser client |
+| `frontend/src/context/AuthContext.jsx` | Session state, sign in/up/out, role |
+| `frontend/src/components/ProtectedRoute.jsx` | Admin/manager route guards |
+| `frontend/src/pages/AdminLogin.jsx` | Admin login |
+| `frontend/src/pages/Signup.jsx` | Manager signup |
+| `frontend/src/App.jsx` | Protected routes |
+| `frontend/src/components/layout/Sidebar.jsx` | User display + logout |
+| `frontend/src/pages/ManagerForm.jsx` | Manager request form |
+| `supabase/migrations/` | DB schema + RLS |
 | `scripts/seed-admin.mjs` | One-time admin seed |
-| `.env.example` | Frontend env template |
+| `frontend/.env.example` | Frontend env template |
+| `backend/.env.example` | Backend env template |
 
 ---
 
-## Backend API (future)
+## Backend API
 
-When the FastAPI backend is wired to the frontend, protect API routes by validating the Supabase JWT (`Authorization: Bearer <access_token>`) and checking `profiles.role` for admin-only endpoints. The frontend can pass `session.access_token` from `useAuth().session`.
+Protect API routes by validating the Supabase JWT (`Authorization: Bearer <access_token>`) and checking the user role for admin-only endpoints. The frontend passes `session.access_token` from `useAuth()`.
 
 ---
 

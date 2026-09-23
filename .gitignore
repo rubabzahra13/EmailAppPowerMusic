@@ -6,41 +6,59 @@ yarn-debug.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Node dependencies
-node_modules
-dist
-dist-ssr
+# Dependencies & build output
+node_modules/
+dist/
+dist-ssr/
+frontend/dist/
 *.local
 
-# Editor directories and files
+# Editor / OS
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+Thumbs.db
 
-# Environment and Virtual Environments
+# Cursor / agent local state (never ship)
+.cursor/
+.claude/
+
+# Environment & secrets — never commit real values
 .env
 .env.*
 !.env.example
 !**/.env.example
-.venv/
-venv/
 backend/.env
+backend/.env.bak
 frontend/.env.local
+*.pem
+*.key
+!**/cacert.pem
+
+# Python virtualenvs (any name / OS)
+.venv/
+.venv-*/
+venv/
 backend/venv/
-
-# Python cache
-__pycache__/
-backend/**/__pycache__/
-*.pyc
-backend/**/*.pyc
-
-# Testing
+backend/.venv/
+backend/.venv-mac/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.egg-info/
+.eggs/
 .pytest_cache/
-.vercel
-.env*
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Vercel local
+.vercel/

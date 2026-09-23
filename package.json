@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:backend": "cd backend && python3 -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000",
     "seed:admin": "node scripts/seed-admin.mjs",
     "seed:admin:py": "python backend/seed_admin.py",
     "supabase:auth-urls": "node scripts/configure-supabase-auth-urls.mjs"

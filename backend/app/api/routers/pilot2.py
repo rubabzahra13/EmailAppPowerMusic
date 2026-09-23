@@ -278,12 +278,25 @@ def oauth_callback(code: str, state: str, db: Session = Depends(get_db)):
         .first()
     )
     if duplicate is not None:
-        return HTMLResponse(
-            oauth_pages.oauth_error_page(
-                message=f"{authorized_email} is already connected as {duplicate.title}."
-            ),
-            status_code=400,
-        )
+        if duplicate.status == "Connected":
+            return HTMLResponse(
+                oauth_pages.oauth_error_page(
+                    message=f"{authorized_email} is already connected as {duplicate.title}."
+                ),
+                status_code=400,
+            )
+        # Add-account OAuth created a pending row, but this Gmail address already
+        # exists as a disconnected inbox — reconnect that row instead of failing.
+        pending = account
+        account = duplicate
+        if pending.title and (
+            not account.title
+            or account.title.startswith("inbox-")
+            or "@connect.local" in (pending.email or "")
+        ):
+            account.title = pending.title
+        db.delete(pending)
+        db.flush()
 
     account.email = authorized_email
     if account.status != "Connected" and _connected_inbox_count(db) >= config.MAX_CONNECTED_INBOXES:

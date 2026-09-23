@@ -40,6 +40,14 @@ export default function GmailAccounts() {
     () => accounts.filter((account) => account.status === 'Connected'),
     [accounts],
   );
+  const visibleAccounts = useMemo(() => {
+    const rank = (status) => (status === 'Connected' ? 0 : 1);
+    return [...accounts].sort((a, b) => {
+      const byStatus = rank(a.status) - rank(b.status);
+      if (byStatus !== 0) return byStatus;
+      return String(a.title || a.email).localeCompare(String(b.title || b.email));
+    });
+  }, [accounts]);
   const atAccountLimit = connectedAccounts.length >= MAX_CONNECTED_INBOXES;
 
   const refresh = useCallback(() => {
@@ -203,12 +211,12 @@ export default function GmailAccounts() {
       <DottedScroll>
         {loading ? (
           <CardListSkeleton rows={4} />
-        ) : connectedAccounts.length === 0 ? (
+        ) : visibleAccounts.length === 0 ? (
           <div className="text-center py-16 px-6">
             <div className="w-12 h-12 rounded-2xl bg-white border border-[var(--color-border-default)] flex items-center justify-center mx-auto mb-3 shadow-sm">
               <Mail className="w-6 h-6 text-[var(--color-text-muted)] opacity-60" />
             </div>
-            <p className="text-sm font-semibold text-[var(--color-text-primary)]">No email accounts connected</p>
+            <p className="text-sm font-semibold text-[var(--color-text-primary)]">No email accounts yet</p>
             <p className="text-xs text-[var(--color-text-muted)] mt-1 max-w-[260px] mx-auto leading-relaxed">
               Add an inbox, then sign in with Google to connect it.
             </p>
@@ -222,7 +230,7 @@ export default function GmailAccounts() {
               Add account
             </button>
           </div>
-        ) : connectedAccounts.map((account) => {
+        ) : visibleAccounts.map((account) => {
           const isConnected = account.status === 'Connected';
           const isBusy = busyId === account.id;
           return (

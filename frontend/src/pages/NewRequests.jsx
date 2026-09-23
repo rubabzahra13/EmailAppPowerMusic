@@ -1,11 +1,10 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
 import {
   Search, Plus, SortAsc, ChevronDown, Filter, Eye, Trash2
 } from 'lucide-react';
 import { format, parseISO, isToday, isYesterday } from 'date-fns';
 import { DataTable, Tag, Modal, Toast, useToast, SelectDropdown, StackedTextCell, TruncateCell, EMPTY_CELL } from '../components/ui';
-import RequestDetailDrawer from '../components/RequestDetailDrawer';
 import RequestComparison from '../components/RequestComparison';
 import PageHeader from '../components/layout/PageHeader';
 import { adminPageScrollClass } from '../utils/responsiveLayout';
@@ -415,6 +414,7 @@ const emptyManagerForm = () => ({
 export default function Requests() {
   const { showToast } = useToast();
   const { profile } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const deepLinkRequestId = searchParams.get('id');
@@ -440,7 +440,7 @@ export default function Requests() {
   const handleOpenRequest = (row) => {
     markRequestViewed(row.id);
     bumpHighlights();
-    setSelectedNewRequest(row);
+    navigate(`/new-requests/${row.id}`);
   };
 
   useEffect(() => {
@@ -525,8 +525,7 @@ export default function Requests() {
   const [sortPreset, setSortPreset] = useState(DEFAULT_SORT);
   const [filterOpen, setFilterOpen] = useState(true);
 
-  // ── Drawer / Modal states ──
-  const [selectedNewRequest, setSelectedNewRequest] = useState(null);
+  // ── Modal states ──
   const [confirmActionRequest, setConfirmActionRequest] = useState(null);
   const [showAddManualModal, setShowAddManualModal] = useState(false);
 
@@ -783,7 +782,6 @@ export default function Requests() {
     const handledAt = new Date().toISOString();
 
     setConfirmActionRequest(null);
-    setSelectedNewRequest(null);
     removeRequestHighlight(req.id);
     bumpHighlights();
 
@@ -1353,7 +1351,6 @@ export default function Requests() {
       <Modal
         isOpen={confirmActionRequest !== null}
         onClose={() => setConfirmActionRequest(null)}
-        belowDrawer={selectedNewRequest !== null}
         confirm
         title="Confirm action"
         footer={
@@ -1392,15 +1389,6 @@ export default function Requests() {
           </p>
         )}
       </Modal>
-
-      {/* ── New Request Detail Drawer ── */}
-      <RequestDetailDrawer
-        request={selectedNewRequest}
-        isOpen={selectedNewRequest !== null}
-        onClose={() => setSelectedNewRequest(null)}
-        directory={liveDirectory}
-        onConfirmAction={(req, adminNote) => setConfirmActionRequest({ request: req, adminNote: adminNote || '' })}
-      />
 
     </div>
   );

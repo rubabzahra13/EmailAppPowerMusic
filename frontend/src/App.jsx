@@ -6,6 +6,7 @@ import { AdminRoute, ManagerRoute, ManagerGuestRoute } from './components/Protec
 import Home from './pages/Home';
 import ManagerForm from './pages/ManagerForm';
 import NewRequests from './pages/NewRequests';
+import RequestDetail from './pages/RequestDetail';
 import Directory from './pages/Directory';
 import TemplateManagement from './pages/TemplateLibrary';
 import EmailAccounts from './pages/EmailAccounts';
@@ -50,6 +51,14 @@ export default function App() {
               element={
                 <AppLayout>
                   <NewRequests />
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/new-requests/:id"
+              element={
+                <AppLayout>
+                  <RequestDetail />
                 </AppLayout>
               }
             />
